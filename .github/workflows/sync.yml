@@ -1,26 +1,22 @@
-name: 自动同步他人仓库
-# 定时每天自动执行，也可以手动触发
+name: awesome-gpt-image-2-API-and-Prompts
+
 on:
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:
-  同步任务:
+  sync_job:
     runs-on: ubuntu-latest
     steps:
-      - name: 拉取仓库代码
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 同步原作者仓库代码
+      - name: Sync with upstream
         uses: aormsby/Fork-Sync-With-Upstream-action@v3
         with:
-          # 不用改下面这行，自动识别仓库
-          upstream_repository: ${{ github.repository_owner }}/${{ github.repository }}
-          # 你要同步的分支，默认主分支 main
+          upstream_repository: EvoLinkAI/awesome-gpt-image-2-API-and-Prompts
           target_branch: main
           upstream_branch: main
-          git_user_name: 自动同步机器人
-          git_user_email: sync@github.com
