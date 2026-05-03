@@ -8,19 +8,16 @@ on:
 jobs:
   sync_job:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Sync Upstream
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git remote add upstream https://github.com/EvoLinkAI/awesome-gpt-image-2-API-and-Prompts.git
-          git fetch upstream
-          git checkout main
-          git merge upstream/main --allow-unrelated-histories
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
+      - name: Sync with upstream
+        uses: dabreadman/sync-upstream@v1.5.0
+        with:
+          upstream: EvoLinkAI/awesome-gpt-image-2-API-and-Prompts
+          branch: main
