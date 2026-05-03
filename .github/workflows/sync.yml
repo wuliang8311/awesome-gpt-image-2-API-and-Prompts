@@ -1,4 +1,4 @@
-name: awesome-gpt-image-2-API-and-Prompts
+name: Auto Sync Fork
 
 on:
   schedule:
@@ -9,14 +9,18 @@ jobs:
   sync_job:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Sync with upstream
-        uses: aormsby/Fork-Sync-With-Upstream-action@v3
-        with:
-          upstream_repository: EvoLinkAI/awesome-gpt-image-2-API-and-Prompts
-          target_branch: main
-          upstream_branch: main
+      - name: Sync Upstream
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git remote add upstream https://github.com/EvoLinkAI/awesome-gpt-image-2-API-and-Prompts.git
+          git fetch upstream
+          git checkout main
+          git merge upstream/main --allow-unrelated-histories
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
