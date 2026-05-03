@@ -14,10 +14,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
 
-      - name: Sync with upstream
-        uses: dabreadman/sync-upstream@v1.5.0
-        with:
-          upstream: EvoLinkAI/awesome-gpt-image-2-API-and-Prompts
-          branch: main
+      - name: Sync Upstream
+        run: |
+          git config --global user.name "sync"
+          git config --global user.email "sync@github.com"
+          git remote add upstream https://github.com/EvoLinkAI/awesome-gpt-image-2-API-and-Prompts.git
+          git fetch upstream
+          git checkout main
+          git reset --hard upstream/main
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main --force
